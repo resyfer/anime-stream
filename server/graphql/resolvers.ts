@@ -1,9 +1,9 @@
 import User from '../models/userModel';
-import { hash, genSalt } from 'bcrypt';
+import { hash, genSalt, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 interface UserArgs {
-	name: string;
+	name?: string;
 	email: string;
 	password: string;
 }
@@ -21,6 +21,13 @@ const resolvers = {
 			_info: any
 		) {
 			try {
+				const userExist = User.findOne({ email: args.email });
+
+				if (userExist)
+					return {
+						error: 'User Already Exists',
+					};
+
 				const hashedPwd = await hash(args.password, await genSalt());
 
 				const user = new User({
@@ -41,6 +48,30 @@ const resolvers = {
 			} catch (err) {
 				console.log(err);
 				return false;
+			}
+		},
+
+		async loginUser(_parent: any, args: UserArgs, _context: any, _info: any) {
+			try {
+				const user = await User.findOne({ email: args.email });
+				const login = await compare(args.password, user.password);
+				const token = jwt.sign(user.id, process.env['SECRET'] as string);
+
+				if (login) {
+					return {
+						name: user.name,
+						jwt: token,
+					};
+				} else {
+					return {
+						error: 'Invalid username/password',
+					};
+				}
+			} catch (err) {
+				console.log(err);
+				return {
+					error: 'Invalid username/password',
+				};
 			}
 		},
 	},

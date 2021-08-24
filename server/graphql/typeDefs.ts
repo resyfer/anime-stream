@@ -31,6 +31,13 @@ let typeDefs = gql`
 		name: String
 		email: String
 		jwt: String
+		error: String
+	}
+
+	type loginResponse {
+		name: String
+		jwt: String
+		error: String
 	}
 
 	type Mutation {
@@ -39,6 +46,8 @@ let typeDefs = gql`
 			email: String!
 			password: String!
 		): registerResponse
+
+		loginUser(email: String!, password: String!): loginResponse
 	}
 `;
 
