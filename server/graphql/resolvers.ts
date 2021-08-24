@@ -10,10 +10,21 @@ interface UserArgs {
 	password: string;
 }
 
+interface watchAnime {
+	seasonId: string;
+	episode: number;
+}
+
 const resolvers = {
 	Query: {
 		async animes() {
-			return await Anime.find();
+			try {
+				return await Anime.find();
+			} catch (err) {
+				return {
+					error: 'There was an error, please try again',
+				};
+			}
 		},
 	},
 
@@ -74,6 +85,32 @@ const resolvers = {
 				console.log(err);
 				return {
 					error: 'Invalid email/password',
+				};
+			}
+		},
+
+		async watchAnime(
+			_parent: any,
+			args: watchAnime,
+			_context: any,
+			_info: any
+		) {
+			try {
+				const anime = await Anime.findOne({
+					'seasons._id': args.seasonId,
+				});
+
+				const seasonIndex = anime.seasons.findIndex(
+					(season: any) => season._id == args.seasonId
+				);
+				anime.seasons[seasonIndex].views++;
+
+				// TODO: Save the episode watched to user data
+
+				return await anime.save();
+			} catch (err) {
+				return {
+					error: err,
 				};
 			}
 		},

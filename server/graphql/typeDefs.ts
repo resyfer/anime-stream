@@ -51,6 +51,7 @@ let typeDefs = gql`
 		description: String
 		genre: [String]
 		seasons: [Season]
+		error: String
 	}
 
 	type Query {
@@ -80,6 +81,8 @@ let typeDefs = gql`
 		): registerResponse
 
 		loginUser(email: String!, password: String!): loginResponse
+
+		watchAnime(seasonId: ID, episode: Int): Anime
 	}
 `;
 
