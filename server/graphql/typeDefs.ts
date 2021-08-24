@@ -1,6 +1,8 @@
 import { gql } from 'apollo-server-express';
 
 let typeDefs = gql`
+	# Queries
+
 	type User {
 		name: String!
 		email: String!
@@ -23,9 +25,39 @@ let typeDefs = gql`
 		DROPPED
 	}
 
-	type Query {
-		users: String
+	type Episode {
+		name: String
+		duration: Int
 	}
+
+	type Airing {
+		year: Int
+		season: String
+	}
+
+	type Season {
+		_id: ID
+		name: String
+		views: Int
+		rating: Int
+		episodes: [Episode]
+		airing: Airing
+		studio: String
+	}
+
+	type Anime {
+		_id: ID
+		name: String
+		description: String
+		genre: [String]
+		seasons: [Season]
+	}
+
+	type Query {
+		animes: [Anime]
+	}
+
+	# Mutations
 
 	type registerResponse {
 		name: String

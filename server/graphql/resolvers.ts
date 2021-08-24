@@ -1,6 +1,8 @@
-import User from '../models/userModel';
 import { hash, genSalt, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
+
+import User from '../models/userModel';
+import Anime from '../models/animeModel';
 
 interface UserArgs {
 	name?: string;
@@ -10,7 +12,9 @@ interface UserArgs {
 
 const resolvers = {
 	Query: {
-		users: () => 'Hello World',
+		async animes() {
+			return await Anime.find();
+		},
 	},
 
 	Mutation: {
@@ -21,8 +25,7 @@ const resolvers = {
 			_info: any
 		) {
 			try {
-				const userExist = User.findOne({ email: args.email });
-
+				const userExist = await User.findOne({ email: args.email });
 				if (userExist)
 					return {
 						error: 'User Already Exists',
@@ -64,13 +67,13 @@ const resolvers = {
 					};
 				} else {
 					return {
-						error: 'Invalid username/password',
+						error: 'Invalid email/password',
 					};
 				}
 			} catch (err) {
 				console.log(err);
 				return {
-					error: 'Invalid username/password',
+					error: 'Invalid email/password',
 				};
 			}
 		},
