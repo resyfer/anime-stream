@@ -5,11 +5,17 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		require: true,
 	},
-	email: String,
-	password: String,
+	email: {
+		type: String,
+		require: true,
+	},
+	password: {
+		type: String,
+		require: true,
+	},
 	list: [
 		{
-			id: mongoose.SchemaTypes.ObjectId,
+			_id: mongoose.SchemaTypes.ObjectId,
 			status: String,
 			episodes: [Boolean],
 			rating: Number,

@@ -11,7 +11,7 @@ let typeDefs = gql`
 	}
 
 	type UserAnime {
-		id: ID!
+		_id: ID!
 		status: Status!
 		episodes: [Boolean]!
 		rating: Float
@@ -56,6 +56,8 @@ let typeDefs = gql`
 
 	type Query {
 		animes: [Anime]
+
+		user(uid: ID!): User
 	}
 
 	# Mutations
@@ -82,7 +84,7 @@ let typeDefs = gql`
 
 		loginUser(email: String!, password: String!): loginResponse
 
-		watchAnime(seasonId: ID, episode: Int): Anime
+		watchAnime(seasonId: ID!, episode: Int!, jwt: String!): Anime
 	}
 `;
 

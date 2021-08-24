@@ -13,6 +13,7 @@ interface UserArgs {
 interface watchAnime {
 	seasonId: string;
 	episode: number;
+	jwt: string;
 }
 
 const resolvers = {
@@ -25,6 +26,10 @@ const resolvers = {
 					error: 'There was an error, please try again',
 				};
 			}
+		},
+
+		async user(_parent: any, args: { uid: string }, _context: any, _info: any) {
+			return await User.findById(args.uid);
 		},
 	},
 
@@ -105,7 +110,34 @@ const resolvers = {
 				);
 				anime.seasons[seasonIndex].views++;
 
-				// TODO: Save the episode watched to user data
+				const userId = jwt.verify(args.jwt, process.env['SECRET'] as string);
+
+				const user = await User.findById(userId);
+
+				const userAnimeIndex: number = user.list.findIndex(
+					(anime: any) => anime._id == args.seasonId
+				);
+
+				if (userAnimeIndex === -1) {
+					user.list.push({
+						_id: args.seasonId,
+						status: 2,
+						episodes: [],
+						rating: 0,
+					});
+
+					user.list[user.list.length - 1].episodes[args.episode] = true;
+					await user.save();
+				} else {
+					user.list[userAnimeIndex].episodes[args.episode] = true;
+
+					if (
+						user.list[userAnimeIndex].episodes((episode: boolean) => episode)
+					) {
+						user.list[userAnimeIndex].status = 1;
+					}
+					await user.save();
+				}
 
 				return await anime.save();
 			} catch (err) {
