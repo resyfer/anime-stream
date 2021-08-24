@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
 	list: [
 		{
 			_id: mongoose.SchemaTypes.ObjectId,
-			status: String,
+			status: Number,
 			episodes: [Boolean],
 			rating: Number,
 		},

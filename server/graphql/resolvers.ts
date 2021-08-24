@@ -126,16 +126,22 @@ const resolvers = {
 						rating: 0,
 					});
 
+					for (let i = 0; i < anime.seasons[seasonIndex].episodes.length; i++)
+						user.list[user.list.length - 1].episodes[i] = false;
+
 					user.list[user.list.length - 1].episodes[args.episode] = true;
 					await user.save();
 				} else {
 					user.list[userAnimeIndex].episodes[args.episode] = true;
 
 					if (
-						user.list[userAnimeIndex].episodes((episode: boolean) => episode)
+						user.list[userAnimeIndex].episodes.every(
+							(episode: boolean) => episode
+						)
 					) {
 						user.list[userAnimeIndex].status = 1;
 					}
+					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
 					await user.save();
 				}
 
