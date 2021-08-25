@@ -28,8 +28,46 @@ const resolvers = {
 			}
 		},
 
+		async animeGenre(
+			_parent: any,
+			args: { genre: string },
+			_context: any,
+			_info: any
+		) {
+			try {
+				return await Anime.find({ genre: args.genre });
+			} catch (err) {
+				return {
+					error: err,
+				};
+			}
+		},
+
 		async user(_parent: any, args: { uid: string }, _context: any, _info: any) {
-			return await User.findById(args.uid);
+			try {
+				return await User.findById(args.uid);
+			} catch (err) {
+				return {
+					error: err,
+				};
+			}
+		},
+
+		async animeSearch(
+			_parent: any,
+			args: { name: string },
+			_context: any,
+			_info: any
+		) {
+			try {
+				return await Anime.find({
+					name: { $regex: args.name, $options: 'i' },
+				});
+			} catch (err) {
+				return {
+					error: err,
+				};
+			}
 		},
 	},
 

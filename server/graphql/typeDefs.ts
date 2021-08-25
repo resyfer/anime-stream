@@ -58,6 +58,10 @@ let typeDefs = gql`
 		animes: [Anime]
 
 		user(uid: ID!): User
+
+		animeGenre(genre: String): [Anime]
+
+		animeSearch(name: String): [Anime]
 	}
 
 	# Mutations
