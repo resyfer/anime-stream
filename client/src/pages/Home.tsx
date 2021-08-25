@@ -1,5 +1,5 @@
 //* React
-import React from 'react';
+import React, { useEffect } from 'react';
 
 //* Dependencies
 import { useQuery } from '@apollo/client';
@@ -10,23 +10,18 @@ import AllBooks from '../graphql/queries/queries';
 //* CSS
 import './css/Home.scss';
 
-type bookType = {
-	title?: string;
-	author?: string;
-};
+//* Props
+interface Props {
+	title: string;
+}
 
 //* Function Component
-const Home: React.FC = () => {
-	// eslint-disable-next-line
-	const { loading, error, data } = useQuery(AllBooks);
-	return (
-		<div id='home'>
-			{data &&
-				data.books.map((book: bookType) => (
-					<div className='book'>{book.title}</div>
-				))}
-		</div>
-	);
+const Home: React.FC<Props> = props => {
+	useEffect(() => {
+		document.title = props.title;
+	}, [props]);
+
+	return <div id='home'>Home</div>;
 };
 
 //* Export

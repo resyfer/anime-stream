@@ -15,6 +15,8 @@ import './App.scss';
 //* Pages
 import Home from './pages/Home';
 import Error404 from './pages/Error404';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 //* Components
 import Navbar from './components/Navbar';
@@ -85,7 +87,15 @@ const App: React.FC = () => {
 
 					<Switch>
 						<Route exact path='/'>
-							<Home />
+							<Home title='Anime Stream | All your weeb needs in one place' />
+						</Route>
+
+						<Route exact path='/signup'>
+							<Signup title='Signup | AnimeStream' />
+						</Route>
+
+						<Route exact path='/login'>
+							<Login title='Login | AnimeStream' />
 						</Route>
 
 						<Route path='/'>
