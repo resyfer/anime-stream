@@ -43,16 +43,6 @@ const resolvers = {
 			}
 		},
 
-		async user(_parent: any, args: { uid: string }, _context: any, _info: any) {
-			try {
-				return await User.findById(args.uid);
-			} catch (err) {
-				return {
-					error: err,
-				};
-			}
-		},
-
 		async animeSearch(
 			_parent: any,
 			args: { name: string },
@@ -68,6 +58,11 @@ const resolvers = {
 					error: err,
 				};
 			}
+		},
+
+		async user(_parent: any, args: { jwt: string }, _context: any, _info: any) {
+			const userId = jwt.verify(args.jwt, process.env['SECRET'] as string);
+			return await User.findById(userId);
 		},
 	},
 

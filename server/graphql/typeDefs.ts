@@ -12,18 +12,17 @@ let typeDefs = gql`
 
 	type UserAnime {
 		_id: ID!
-		status: Status!
+		status: Int!
 		episodes: [Boolean]!
 		rating: Float
 	}
 
-	enum Status {
-		COMPLETED
-		WATCHING
-		ON_HOLD
-		PLAN_TO_WATCH
-		DROPPED
-	}
+	# status:
+	#	COMPLETED				0
+	#	WATCHING				1
+	#	ON_HOLD					2
+	#	PLAN_TO_WATCH		3
+	#	DROPPED					4
 
 	type Episode {
 		name: String
@@ -57,7 +56,7 @@ let typeDefs = gql`
 	type Query {
 		animes: [Anime]
 
-		user(uid: ID!): User
+		user(jwt: String): User
 
 		animeGenre(genre: String): [Anime]
 
