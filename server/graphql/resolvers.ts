@@ -93,13 +93,13 @@ const resolvers = {
 				const token = jwt.sign(userData.id, process.env['SECRET'] as string);
 
 				return {
-					name: userData.name,
-					email: userData.email,
+					user,
 					jwt: token,
 				};
 			} catch (err) {
-				console.log(err);
-				return false;
+				return {
+					error: 'There was an error',
+				};
 			}
 		},
 

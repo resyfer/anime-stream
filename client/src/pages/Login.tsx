@@ -22,6 +22,7 @@ interface Props {
 }
 
 const Login: React.FC<Props> = props => {
+	//* Set Document Title
 	useEffect(() => {
 		document.title = props.title;
 	}, [props]);

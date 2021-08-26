@@ -66,8 +66,7 @@ let typeDefs = gql`
 	# Mutations
 
 	type registerResponse {
-		name: String
-		email: String
+		user: User
 		jwt: String
 		error: String
 	}
