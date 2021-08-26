@@ -1,12 +1,6 @@
 //* React
 import React, { useEffect } from 'react';
 
-//* Dependencies
-import { useQuery } from '@apollo/client';
-
-//* Module Imports
-import AllBooks from '../graphql/queries/queries';
-
 //* CSS
 import './css/Home.scss';
 

@@ -1,13 +1,16 @@
 //* React
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { gql, useQuery } from '@apollo/client';
 
 //* Dependencies
 import Cookies from 'js-cookie';
 
 //* Context
 import { UserContext } from './context/userContext';
+
+//* GraphQL
+import { useQuery } from '@apollo/client';
+import USER from './graphql/queries/userQuery';
 
 //* CSS
 import './App.scss';
@@ -44,20 +47,6 @@ interface User {
 }
 
 const cookie = Cookies.get('jwt');
-
-//* GraphQL Queries
-const USER = gql`
-	query User($jwtCookie: String!) {
-		user(jwt: $jwtCookie) {
-			name
-			email
-			list {
-				episodes
-				status
-			}
-		}
-	}
-`;
 
 //* Function Component
 const App: React.FC = () => {

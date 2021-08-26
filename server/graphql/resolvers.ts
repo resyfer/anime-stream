@@ -111,7 +111,7 @@ const resolvers = {
 
 				if (login) {
 					return {
-						name: user.name,
+						user,
 						jwt: token,
 					};
 				} else {
@@ -120,7 +120,6 @@ const resolvers = {
 					};
 				}
 			} catch (err) {
-				console.log(err);
 				return {
 					error: 'Invalid email/password',
 				};

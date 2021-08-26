@@ -73,7 +73,7 @@ let typeDefs = gql`
 	}
 
 	type loginResponse {
-		name: String
+		user: User
 		jwt: String
 		error: String
 	}
