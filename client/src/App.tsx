@@ -47,6 +47,7 @@ interface User {
 const App: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loggedIn, setLoggedIn] = useState<boolean>(false);
+	const [search, setSearch] = useState<string>('');
 
 	const { loading, error, data } = useQuery(USER);
 
@@ -63,7 +64,15 @@ const App: React.FC = () => {
 	return (
 		<div className='App'>
 			<UserContext.Provider
-				value={{ user, setUser, loggedIn, setLoggedIn, url }}>
+				value={{
+					user,
+					setUser,
+					loggedIn,
+					setLoggedIn,
+					search,
+					setSearch,
+					url,
+				}}>
 				<Router>
 					<Navbar />
 
