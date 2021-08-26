@@ -56,7 +56,7 @@ let typeDefs = gql`
 	type Query {
 		animes: [Anime]
 
-		user(jwt: String): User
+		user: User
 
 		animeGenre(genre: String): [Anime]
 

@@ -16,6 +16,10 @@ interface watchAnime {
 	jwt: string;
 }
 
+interface Context {
+	uid: string;
+}
+
 const resolvers = {
 	Query: {
 		async animes() {
@@ -31,7 +35,7 @@ const resolvers = {
 		async animeGenre(
 			_parent: any,
 			args: { genre: string },
-			_context: any,
+			_context: Context,
 			_info: any
 		) {
 			try {
@@ -46,7 +50,7 @@ const resolvers = {
 		async animeSearch(
 			_parent: any,
 			args: { name: string },
-			_context: any,
+			_context: Context,
 			_info: any
 		) {
 			try {
@@ -60,9 +64,20 @@ const resolvers = {
 			}
 		},
 
-		async user(_parent: any, args: { jwt: string }, _context: any, _info: any) {
-			const userId = jwt.verify(args.jwt, process.env['SECRET'] as string);
-			return await User.findById(userId);
+		async user(_parent: any, _args: any, context: Context, _info: any) {
+			try {
+				if (context && context.uid) {
+					return await User.findById(context.uid);
+				} else {
+					return {
+						error: 'Could not find User',
+					};
+				}
+			} catch (err) {
+				return {
+					error: 'Could not find User',
+				};
+			}
 		},
 	},
 
@@ -70,7 +85,7 @@ const resolvers = {
 		async registerUser(
 			_parent: any,
 			args: UserArgs,
-			_context: any,
+			_context: Context,
 			_info: any
 		) {
 			try {
@@ -103,7 +118,12 @@ const resolvers = {
 			}
 		},
 
-		async loginUser(_parent: any, args: UserArgs, _context: any, _info: any) {
+		async loginUser(
+			_parent: any,
+			args: UserArgs,
+			_context: Context,
+			_info: any
+		) {
 			try {
 				const user = await User.findOne({ email: args.email });
 				const login = await compare(args.password, user.password);
@@ -120,6 +140,7 @@ const resolvers = {
 					};
 				}
 			} catch (err) {
+				console.log(err);
 				return {
 					error: 'Invalid email/password',
 				};
@@ -129,7 +150,7 @@ const resolvers = {
 		async watchAnime(
 			_parent: any,
 			args: watchAnime,
-			_context: any,
+			_context: Context,
 			_info: any
 		) {
 			try {
