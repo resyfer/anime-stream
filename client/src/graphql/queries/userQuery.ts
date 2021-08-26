@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 const USER = gql`
-	query User($jwtCookie: String!) {
-		user(jwt: $jwtCookie) {
+	query User {
+		user {
 			name
 			email
 			list {

@@ -2,9 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-//* Dependencies
-import Cookies from 'js-cookie';
-
 //* Context
 import { UserContext } from './context/userContext';
 
@@ -46,16 +43,12 @@ interface User {
 	error: any;
 }
 
-const cookie = Cookies.get('jwt');
-
 //* Function Component
 const App: React.FC = () => {
 	const [user, setUser] = useState<User | null>(null);
 	const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
-	const { loading, error, data } = useQuery(USER, {
-		variables: { jwtCookie: cookie },
-	});
+	const { loading, error, data } = useQuery(USER);
 
 	useEffect(() => {
 		setUser(() => {
@@ -76,6 +69,7 @@ const App: React.FC = () => {
 
 					<Switch>
 						<Route exact path='/'>
+							{user && user.name}
 							<Home title='Anime Stream | All your weeb needs in one place' />
 						</Route>
 
