@@ -79,6 +79,32 @@ const resolvers = {
 				};
 			}
 		},
+
+		async userList(_parent: any, _args: any, context: Context, _info: any) {
+			try {
+				if (context && context.uid) {
+					const user = await User.findById(context.uid);
+
+					const animePromises: any = [];
+					user.list.forEach((season: any, index: number) => {
+						animePromises[index] = Anime.findOne({ 'seasons._id': season._id });
+					});
+
+					return {
+						user: await user,
+						animes: await Promise.all([...animePromises]),
+					};
+				} else {
+					return {
+						error: 'Error finding list',
+					};
+				}
+			} catch (err) {
+				return {
+					error: 'Error finding list',
+				};
+			}
+		},
 	},
 
 	Mutation: {

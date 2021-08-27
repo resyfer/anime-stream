@@ -18,6 +18,7 @@ import Home from './pages/Home';
 import Error404 from './pages/Error404';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import MyList from './pages/MyList';
 
 //* Components
 import Navbar from './components/Navbar';
@@ -88,6 +89,10 @@ const App: React.FC = () => {
 
 						<Route exact path='/login'>
 							<Login title='Login | AnimeStream' />
+						</Route>
+
+						<Route exact path='/my-list'>
+							<MyList title='My List | AnimeStream' />
 						</Route>
 
 						<Route path='/'>

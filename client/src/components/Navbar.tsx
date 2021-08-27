@@ -34,6 +34,9 @@ const Navbar: React.FC = () => {
 						<Button basic color='youtube' as={Link} to='/list'>
 							List
 						</Button>
+						<Button basic color='youtube' as={Link} to='/my-list'>
+							My List
+						</Button>
 						<Button basic color='youtube' as={Link} to='/browse'>
 							Browse
 						</Button>
@@ -54,8 +57,6 @@ const Navbar: React.FC = () => {
 						<Button basic as={Link} to='/profile'>
 							<Image
 								src={`https://avatars.dicebear.com/api/identicon/${user.name}.svg`}
-								as={Link}
-								to='/profile'
 								avatar
 							/>
 							&emsp;

@@ -53,6 +53,11 @@ let typeDefs = gql`
 		error: String
 	}
 
+	type UserList {
+		user: User
+		animes: [Anime]
+	}
+
 	type Query {
 		animes: [Anime]
 
@@ -61,8 +66,9 @@ let typeDefs = gql`
 		animeGenre(genre: String): [Anime]
 
 		animeSearch(name: String): [Anime]
-	}
 
+		userList: UserList
+	}
 	# Mutations
 
 	type registerResponse {
