@@ -10,6 +10,7 @@ import { useQuery } from '@apollo/client';
 import USER from './graphql/queries/userQuery';
 
 //* CSS
+import 'semantic-ui-css/semantic.min.css';
 import './App.scss';
 
 //* Pages
@@ -78,7 +79,6 @@ const App: React.FC = () => {
 
 					<Switch>
 						<Route exact path='/'>
-							{user && user.name}
 							<Home title='Anime Stream | All your weeb needs in one place' />
 						</Route>
 
