@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-import { episodeSchema as Episode } from './episodeSchema';
-
 const seasonSchema = new mongoose.Schema({
 	anime: mongoose.SchemaTypes.ObjectId,
 	airing: [
@@ -11,7 +9,12 @@ const seasonSchema = new mongoose.Schema({
 		},
 	],
 	studio: String,
-	episodes: [Episode],
+	episodes: [
+		{
+			name: String,
+			duration: Number,
+		},
+	],
 	img: {
 		thumbnail: String,
 		wallpaper: String,
