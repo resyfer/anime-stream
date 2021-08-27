@@ -27,10 +27,23 @@ const MyList: React.FC<Props> = props => {
 	return (
 		<main className='my-list'>
 			{data &&
-				data.userList.user.list.map((season: any, index: number) => (
-					<div className='anime' key={index}>
-						{data.userList.animes[index].name}
-					</div>
+				data.userList.user.list.map((_anime: any, index: number) => (
+					<React.Fragment key={index}>
+						<div className='anime'>
+							<div className='name'>{data.userList.animes[index].name}</div>
+							<div className='name'>
+								{data.userList.animes[index].seasons.map(
+									(season: any, seasonIndex: number) => (
+										<div className='season' key={`season${seasonIndex}`}>
+											{season.name}
+										</div>
+									)
+								)}
+							</div>
+						</div>
+						<br />
+						<br />
+					</React.Fragment>
 				))}
 		</main>
 	);
