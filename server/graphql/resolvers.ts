@@ -212,16 +212,18 @@ const resolvers = {
 				const list: any[] = user.list;
 
 				const seasonIndex: number = list.findIndex(
-					(season: string) => season === args.seasonId
+					(season: any) => season._id == args.seasonId
 				);
 
 				const season = Season.findById(args.seasonId);
 
 				if (seasonIndex != -1 && season) {
 					if (args.status) user.list[seasonIndex].status = args.status;
-					if (args.episode && args.episodeWatched)
+
+					if (args.episode && args.episodeWatched != null)
 						user.list[seasonIndex].episodes[args.episode - 1] =
 							args.episodeWatched;
+
 					if (args.rating) user.list[seasonIndex].rating = args.rating;
 
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
