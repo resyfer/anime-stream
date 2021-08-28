@@ -19,6 +19,7 @@ const UserSchema = new mongoose.Schema({
 			status: Number,
 			episodes: [Boolean],
 			rating: Number,
+			liked: Boolean,
 		},
 	],
 });

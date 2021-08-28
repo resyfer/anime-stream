@@ -3,6 +3,13 @@ import { gql } from 'apollo-server-express';
 let typeDefs = gql`
 	# Queries
 
+	type UserAnime {
+		_id: ID
+		status: Int
+		episodes: [Boolean]
+		rating: Float
+	}
+
 	type User {
 		name: String!
 		email: String!
@@ -10,11 +17,54 @@ let typeDefs = gql`
 		list: [UserAnime]
 	}
 
-	type UserAnime {
-		_id: ID
-		status: Int
-		episodes: [Boolean]
+	type Anime {
+		name: String
+		description: String
+		season: ID
+		genre: [String]
+	}
+
+	type Airing {
+		year: Int
+		season: String
+	}
+
+	type Episodes {
+		name: String
+		duration: Int
+	}
+
+	type Image {
+		thumbnail: String
+		wallpaper: String
+	}
+
+	type SeasonName {
+		anime: String
+		season: String
+	}
+
+	type Stats {
+		views: Int
 		rating: Float
+		likes: Int
+	}
+
+	type Season {
+		_id: ID
+		anime: ID
+
+		airing: [Airing]
+
+		studio: String
+
+		episodes: [Episodes]
+
+		img: Image
+
+		name: SeasonName
+
+		stats: Stats
 	}
 
 	# status:
@@ -25,13 +75,13 @@ let typeDefs = gql`
 	#	DROPPED					4
 
 	type Query {
-		# TODO: Add the custom types
 		user: User
 
 		anime: [Anime]
 
 		watchList: [UserAnime]
 	}
+
 	# Mutations
 
 	type registerResponse {
@@ -55,7 +105,9 @@ let typeDefs = gql`
 
 		loginUser(email: String!, password: String!): loginResponse
 
-		watchAnime(seasonId: ID!, episode: Int!): Anime
+		watchAnime(seasonId: ID!, episode: Int!): Season
+
+		likeSeason(seasonId: ID!, liked: Boolean): Int
 
 		changeList(
 			seasonId: ID!

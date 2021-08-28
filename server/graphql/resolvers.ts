@@ -173,16 +173,26 @@ const resolvers = {
 							rating: 0,
 						});
 						user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
-						return await user.save();
+						await user.save();
+
+						season.stats.views++;
+						season.markModified('stats'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+						return await season.save();
 					} else {
 						return {
 							error: 'Error finding such entity',
 						};
 					}
 				} else {
+					const season = await Season.findById(args.seasonId);
+
 					user.list[seasonIndex].episodes[args.episode - 1] = true;
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
 					await user.save();
+
+					season.stats.views++;
+					season.markModified('stats'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+					return await season.save();
 				}
 			} catch (err) {
 				return {
@@ -240,6 +250,43 @@ const resolvers = {
 				} else {
 					return {
 						error: 'There was an error',
+					};
+				}
+			} catch (err) {
+				return {
+					error: 'There was an error',
+				};
+			}
+		},
+
+		async likeSeason(
+			_parent: any,
+			args: { seasonId: string; liked: boolean },
+			context: Context,
+			_info: any
+		) {
+			try {
+				const user = await User.findById(context.uid);
+				const list: any[] = user.list;
+
+				const seasonIndex: number = list.findIndex(
+					(season: string) => season === args.seasonId
+				);
+
+				const season = await Season.findById(args.seasonId);
+
+				if (seasonIndex != -1) {
+					user.list[seasonIndex].liked = args.liked;
+					if (args.liked) season.stats.likes++;
+					else season.stats.likes--;
+
+					await user.save();
+					await season.save();
+
+					return season.stats.likes;
+				} else {
+					return {
+						error: 'Anime not found',
 					};
 				}
 			} catch (err) {
