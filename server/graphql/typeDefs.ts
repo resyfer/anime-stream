@@ -10,13 +10,6 @@ let typeDefs = gql`
 		list: [UserAnime]
 	}
 
-	type UserAnime {
-		_id: ID!
-		status: Int!
-		episodes: [Boolean]!
-		rating: Float
-	}
-
 	# status:
 	#	COMPLETED				0
 	#	WATCHING				1
@@ -24,50 +17,14 @@ let typeDefs = gql`
 	#	PLAN_TO_WATCH		3
 	#	DROPPED					4
 
-	type Episode {
-		name: String
-		duration: Int
-	}
-
-	type Airing {
-		year: Int
-		season: String
-	}
-
-	type Season {
-		_id: ID
-		name: String
-		views: Int
-		rating: Int
-		episodes: [Episode]
-		airing: Airing
-		studio: String
-	}
-
-	type Anime {
-		_id: ID
-		name: String
-		description: String
-		genre: [String]
-		seasons: [Season]
-		error: String
-	}
-
-	type UserList {
-		user: User
-		animes: [Anime]
-	}
-
 	type Query {
-		animes: [Anime]
-
+		# TODO: Add the custom types
 		user: User
 
-		animeGenre(genre: String): [Anime]
+		anime: [Anime]
 
-		animeSearch(name: String): [Anime]
+		watchList: 
 
-		userList: UserList
 	}
 	# Mutations
 
