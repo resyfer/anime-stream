@@ -270,25 +270,26 @@ const resolvers = {
 				const list: any[] = user.list;
 
 				const seasonIndex: number = list.findIndex(
-					(season: string) => season === args.seasonId
+					(season: any) => season._id == args.seasonId
 				);
 
 				const season = await Season.findById(args.seasonId);
 
-				if (seasonIndex != -1) {
-					user.list[seasonIndex].liked = args.liked;
-					if (args.liked) season.stats.likes++;
-					else season.stats.likes--;
-
-					await user.save();
-					await season.save();
-
-					return season.stats.likes;
-				} else {
+				if (user.list[seasonIndex].liked == args.liked) {
 					return {
-						error: 'Anime not found',
+						likes: season.stats.likes,
 					};
 				}
+
+				user.list[seasonIndex].liked = args.liked;
+				if (args.liked) season.stats.likes++;
+				else season.stats.likes--;
+
+				await user.save();
+				const updatedSeason = await season.save();
+				return {
+					likes: updatedSeason.stats.likes,
+				};
 			} catch (err) {
 				return {
 					error: 'There was an error',

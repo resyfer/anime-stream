@@ -7,7 +7,7 @@ const animeSchema = new mongoose.Schema({
 	},
 	description: String,
 	genre: [String],
-	season: [mongoose.SchemaTypes.ObjectId],
+	seasons: [mongoose.SchemaTypes.ObjectId],
 });
 
 const Anime = mongoose.model('anime', animeSchema);

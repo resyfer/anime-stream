@@ -18,10 +18,11 @@ let typeDefs = gql`
 	}
 
 	type Anime {
+		_id: ID
 		name: String
 		description: String
-		season: ID
 		genre: [String]
+		seasons: [ID]
 	}
 
 	type Airing {
@@ -96,6 +97,11 @@ let typeDefs = gql`
 		error: String
 	}
 
+	type likeSeasonResponse {
+		likes: Int
+		error: String
+	}
+
 	type Mutation {
 		registerUser(
 			name: String!
@@ -107,7 +113,7 @@ let typeDefs = gql`
 
 		watchAnime(seasonId: ID!, episode: Int!): Season
 
-		likeSeason(seasonId: ID!, liked: Boolean): Int
+		likeSeason(seasonId: ID!, liked: Boolean!): likeSeasonResponse
 
 		changeList(
 			seasonId: ID!
