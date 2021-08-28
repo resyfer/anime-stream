@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
-import { seasonSchema as Season } from './seasonSchema';
-
 const animeSchema = new mongoose.Schema({
-	name: String,
+	name: {
+		type: String,
+		required: true,
+	},
 	description: String,
 	genre: [String],
-	seasons: [Season],
+	seasons: [mongoose.SchemaTypes.ObjectId],
 });
 
 const Anime = mongoose.model('anime', animeSchema);

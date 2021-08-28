@@ -2,6 +2,7 @@ import { hash, genSalt, compare } from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 import User from '../models/userModel';
+import Season from '../models/seasonModel';
 import Anime from '../models/animeModel';
 
 interface UserArgs {
@@ -13,7 +14,14 @@ interface UserArgs {
 interface watchAnime {
 	seasonId: string;
 	episode: number;
-	jwt: string;
+}
+
+interface listArgs {
+	seasonId: string;
+	status?: number;
+	episode?: number;
+	episodeWatched?: boolean;
+	rating?: number;
 }
 
 interface Context {
@@ -22,48 +30,6 @@ interface Context {
 
 const resolvers = {
 	Query: {
-		async animes() {
-			try {
-				return await Anime.find();
-			} catch (err) {
-				return {
-					error: 'There was an error, please try again',
-				};
-			}
-		},
-
-		async animeGenre(
-			_parent: any,
-			args: { genre: string },
-			_context: Context,
-			_info: any
-		) {
-			try {
-				return await Anime.find({ genre: args.genre });
-			} catch (err) {
-				return {
-					error: err,
-				};
-			}
-		},
-
-		async animeSearch(
-			_parent: any,
-			args: { name: string },
-			_context: Context,
-			_info: any
-		) {
-			try {
-				return await Anime.find({
-					name: { $regex: args.name, $options: 'i' },
-				});
-			} catch (err) {
-				return {
-					error: err,
-				};
-			}
-		},
-
 		async user(_parent: any, _args: any, context: Context, _info: any) {
 			try {
 				if (context && context.uid) {
@@ -80,28 +46,33 @@ const resolvers = {
 			}
 		},
 
-		async userList(_parent: any, _args: any, context: Context, _info: any) {
+		async anime() {
+			try {
+				return await Anime.find();
+			} catch (err) {
+				console.log(err);
+				return {
+					error: err,
+				};
+			}
+		},
+
+		async watchList(_parent: any, _args: any, context: Context, _info: any) {
 			try {
 				if (context && context.uid) {
 					const user = await User.findById(context.uid);
 
-					const animePromises: any = [];
-					user.list.forEach((season: any, index: number) => {
-						animePromises[index] = Anime.findOne({ 'seasons._id': season._id });
-					});
-
-					return {
-						user: await user,
-						animes: await Promise.all([...animePromises]),
-					};
+					// TODO: Add season data in the list
+					return await user.list;
 				} else {
 					return {
-						error: 'Error finding list',
+						error: 'User not authenticated',
 					};
 				}
 			} catch (err) {
+				console.log(err);
 				return {
-					error: 'Error finding list',
+					error: 'There was an error fetching watch list data',
 				};
 			}
 		},
@@ -176,58 +147,158 @@ const resolvers = {
 		async watchAnime(
 			_parent: any,
 			args: watchAnime,
-			_context: Context,
+			context: Context,
 			_info: any
 		) {
 			try {
-				const anime = await Anime.findOne({
-					'seasons._id': args.seasonId,
-				});
-
-				const seasonIndex = anime.seasons.findIndex(
+				const user = await User.findById(context.uid);
+				const list: any[] = await user.list;
+				const seasonIndex = list.findIndex(
 					(season: any) => season._id == args.seasonId
 				);
-				anime.seasons[seasonIndex].views++;
 
-				const userId = jwt.verify(args.jwt, process.env['SECRET'] as string);
+				if (seasonIndex === -1) {
+					const season = await Season.findById(args.seasonId);
+					const episodes: boolean[] = [];
+					for (let i = 0; i < season.episodes.length; i++) episodes[i] = false;
+					episodes[args.episode - 1] = true;
 
-				const user = await User.findById(userId);
+					if (args.episode <= episodes.length && args.episode >= 1) {
+						user.list.push({
+							_id: args.seasonId,
+							status: 2,
+							episodes,
+							rating: 0,
+						});
+						user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+						await user.save();
 
-				const userAnimeIndex: number = user.list.findIndex(
-					(anime: any) => anime._id == args.seasonId
-				);
-
-				if (userAnimeIndex === -1) {
-					user.list.push({
-						_id: args.seasonId,
-						status: 2,
-						episodes: [],
-						rating: 0,
-					});
-
-					for (let i = 0; i < anime.seasons[seasonIndex].episodes.length; i++)
-						user.list[user.list.length - 1].episodes[i] = false;
-
-					user.list[user.list.length - 1].episodes[args.episode] = true;
-					await user.save();
+						season.stats.views++;
+						season.markModified('stats'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+						return await season.save();
+					} else {
+						return {
+							error: 'Error finding such entity',
+						};
+					}
 				} else {
-					user.list[userAnimeIndex].episodes[args.episode] = true;
+					const season = await Season.findById(args.seasonId);
+
+					user.list[seasonIndex].episodes[args.episode - 1] = true;
 
 					if (
-						user.list[userAnimeIndex].episodes.every(
-							(episode: boolean) => episode
-						)
-					) {
-						user.list[userAnimeIndex].status = 1;
-					}
+						user.list[seasonIndex].episodes.every((episode: boolean) => episode)
+					)
+						user.list[seasonIndex].status = 1;
+
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
 					await user.save();
-				}
 
-				return await anime.save();
+					season.stats.views++;
+					season.markModified('stats'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+					return await season.save();
+				}
 			} catch (err) {
 				return {
-					error: err,
+					error: 'There was an error',
+				};
+			}
+		},
+
+		async changeList(
+			_parent: any,
+			args: listArgs,
+			context: Context,
+			_info: any
+		) {
+			try {
+				const user = await User.findById(context.uid);
+				const list: any[] = user.list;
+
+				const seasonIndex: number = list.findIndex(
+					(season: any) => season._id == args.seasonId
+				);
+
+				const season = Season.findById(args.seasonId);
+
+				if (seasonIndex != -1 && season) {
+					if (args.status) user.list[seasonIndex].status = args.status;
+
+					if (args.episode && args.episodeWatched != null)
+						user.list[seasonIndex].episodes[args.episode - 1] =
+							args.episodeWatched;
+
+					if (args.rating) user.list[seasonIndex].rating = args.rating;
+
+					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+
+					const updatedUser = await user.save();
+
+					return updatedUser.list[seasonIndex];
+				} else if (season) {
+					const episodes: boolean[] = [];
+					for (let i = 0; i < season.episodes.length; i++) episodes[i] = true;
+
+					if (args.episode && args.episodeWatched)
+						episodes[args.episode - 1] = args.episodeWatched;
+
+					user.list.push({
+						_id: args.seasonId,
+						status: args.status ? args.status : 2,
+						episodes,
+						rating: args.rating ? args.rating : 0,
+					});
+					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+
+					const updatedUser = await user.save();
+
+					return updatedUser.list[updatedUser.list.length - 1];
+				} else {
+					return {
+						error: 'There was an error',
+					};
+				}
+			} catch (err) {
+				return {
+					error: 'There was an error',
+				};
+			}
+		},
+
+		async likeSeason(
+			_parent: any,
+			args: { seasonId: string; liked: boolean },
+			context: Context,
+			_info: any
+		) {
+			try {
+				const user = await User.findById(context.uid);
+				const list: any[] = user.list;
+
+				const seasonIndex: number = list.findIndex(
+					(season: any) => season._id == args.seasonId
+				);
+
+				const season = await Season.findById(args.seasonId);
+
+				if (user.list[seasonIndex].liked == args.liked) {
+					return {
+						likes: season.stats.likes,
+					};
+				}
+
+				user.list[seasonIndex].liked = args.liked;
+				if (args.liked) season.stats.likes++;
+				else season.stats.likes--;
+
+				await user.save();
+				const updatedSeason = await season.save();
+				return {
+					likes: updatedSeason.stats.likes,
+				};
+			} catch (err) {
+				return {
+					error: 'There was an error',
 				};
 			}
 		},

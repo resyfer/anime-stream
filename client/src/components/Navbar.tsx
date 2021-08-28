@@ -34,9 +34,11 @@ const Navbar: React.FC = () => {
 						<Button basic color='youtube' as={Link} to='/list'>
 							List
 						</Button>
-						<Button basic color='youtube' as={Link} to='/my-list'>
-							My List
-						</Button>
+						{loggedIn && (
+							<Button basic color='youtube' as={Link} to='/my-list'>
+								My List
+							</Button>
+						)}
 						<Button basic color='youtube' as={Link} to='/browse'>
 							Browse
 						</Button>

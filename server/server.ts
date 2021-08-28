@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 
 //* Module Imports
 import typeDefs from './graphql/typeDefs';
@@ -16,17 +17,29 @@ dotenv.config({ path: './config/.env' });
 //* Start Server
 (async () => {
 	const app = express();
-	app.use(cookieParser());
 
+	process.env['NODE_ENV'] == 'development' &&
+		app.use(
+			cors({
+				origin: 'https://studio.apollographql.com',
+				credentials: true,
+			})
+		); //! For testing on Apollo
+
+	app.use(cookieParser());
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
-		context: ({ req }) => {
+		context: ({ req, res }) => {
+			res.set({
+				'Access-Control-Allow-Origin': 'https://studio.apollographql.com',
+				'Access-Control-Allow-Credentials': true,
+			});
+
 			if (req && req.cookies && req.cookies.jwt) {
 				const token = req.cookies.jwt;
 
 				const uid = jwt.verify(token, process.env['SECRET'] as string);
-
 				return { uid };
 			} else {
 				return null;
