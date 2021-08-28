@@ -16,6 +16,14 @@ interface watchAnime {
 	episode: number;
 }
 
+interface listArgs {
+	seasonId: string;
+	status?: number;
+	episode?: number;
+	episodeWatched?: boolean;
+	rating?: number;
+}
+
 interface Context {
 	uid: string;
 }
@@ -160,7 +168,7 @@ const resolvers = {
 					if (args.episode <= episodes.length && args.episode >= 1) {
 						user.list.push({
 							_id: args.seasonId,
-							status: 1,
+							status: 2,
 							episodes,
 							rating: 0,
 						});
@@ -175,6 +183,58 @@ const resolvers = {
 					user.list[seasonIndex].episodes[args.episode - 1] = true;
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
 					await user.save();
+				}
+			} catch (err) {
+				return {
+					error: 'There was an error',
+				};
+			}
+		},
+
+		async changeList(
+			_parent: any,
+			args: listArgs,
+			context: Context,
+			_info: any
+		) {
+			try {
+				const user = await User.findById(context.uid);
+				const list: any[] = user.list;
+
+				const seasonIndex: number = list.findIndex(
+					(season: string) => season === args.seasonId
+				);
+
+				const season = Season.findById(args.seasonId);
+
+				if (seasonIndex != -1 && season) {
+					if (args.status) user.list[seasonIndex].status = args.status;
+					if (args.episode && args.episodeWatched)
+						user.list[seasonIndex].episodes[args.episode - 1] =
+							args.episodeWatched;
+					if (args.rating) user.list[seasonIndex].rating = args.rating;
+
+					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+					return await user.save();
+				} else if (season) {
+					const episodes: boolean[] = [];
+					for (let i = 0; i < season.episodes.length; i++) episodes[i] = true;
+
+					if (args.episode && args.episodeWatched)
+						episodes[args.episode - 1] = args.episodeWatched;
+
+					user.list.push({
+						_id: args.seasonId,
+						status: args.status ? args.status : 2,
+						episodes,
+						rating: args.rating ? args.rating : 0,
+					});
+					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
+					return await user.save();
+				} else {
+					return {
+						error: 'There was an error',
+					};
 				}
 			} catch (err) {
 				return {
