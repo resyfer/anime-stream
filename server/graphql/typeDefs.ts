@@ -66,6 +66,8 @@ let typeDefs = gql`
 		name: SeasonName
 
 		stats: Stats
+
+		error: String
 	}
 
 	# status:

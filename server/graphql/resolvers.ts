@@ -153,14 +153,12 @@ const resolvers = {
 			try {
 				const user = await User.findById(context.uid);
 				const list: any[] = await user.list;
-
 				const seasonIndex = list.findIndex(
-					(season: string) => season === args.seasonId
+					(season: any) => season._id == args.seasonId
 				);
 
 				if (seasonIndex === -1) {
 					const season = await Season.findById(args.seasonId);
-
 					const episodes: boolean[] = [];
 					for (let i = 0; i < season.episodes.length; i++) episodes[i] = false;
 					episodes[args.episode - 1] = true;
@@ -187,6 +185,12 @@ const resolvers = {
 					const season = await Season.findById(args.seasonId);
 
 					user.list[seasonIndex].episodes[args.episode - 1] = true;
+
+					if (
+						user.list[seasonIndex].episodes.every((episode: boolean) => episode)
+					)
+						user.list[seasonIndex].status = 1;
+
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
 					await user.save();
 
