@@ -215,7 +215,10 @@ const resolvers = {
 					if (args.rating) user.list[seasonIndex].rating = args.rating;
 
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
-					return await user.save();
+
+					const updatedUser = await user.save();
+
+					return updatedUser.list[seasonIndex];
 				} else if (season) {
 					const episodes: boolean[] = [];
 					for (let i = 0; i < season.episodes.length; i++) episodes[i] = true;
@@ -230,7 +233,10 @@ const resolvers = {
 						rating: args.rating ? args.rating : 0,
 					});
 					user.markModified('list'); //! Otherwise Mongoose won't know the array was modified. Similar to const
-					return await user.save();
+
+					const updatedUser = await user.save();
+
+					return updatedUser.list[updatedUser.list.length - 1];
 				} else {
 					return {
 						error: 'There was an error',
