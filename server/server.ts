@@ -30,7 +30,12 @@ dotenv.config({ path: './config/.env' });
 	const server = new ApolloServer({
 		typeDefs,
 		resolvers,
-		context: ({ req }) => {
+		context: ({ req, res }) => {
+			res.set({
+				'Access-Control-Allow-Origin': 'https://studio.apollographql.com',
+				'Access-Control-Allow-Credentials': true,
+			});
+
 			if (req && req.cookies && req.cookies.jwt) {
 				const token = req.cookies.jwt;
 
