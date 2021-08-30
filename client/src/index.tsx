@@ -2,6 +2,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+//* Chakra UI
+import { ChakraProvider } from '@chakra-ui/react';
+
 //* Module Imports
 import App from './App';
 
@@ -26,7 +29,9 @@ const client = new ApolloClient({
 //* React Render
 ReactDOM.render(
 	<ApolloProvider client={client}>
-		<App />
+		<ChakraProvider>
+			<App />
+		</ChakraProvider>
 	</ApolloProvider>,
 	document.getElementById('root')
 );

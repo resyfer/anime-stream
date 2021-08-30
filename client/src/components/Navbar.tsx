@@ -1,14 +1,25 @@
 //* React
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+
+//* Chakra UI
 import {
 	Button,
 	ButtonGroup,
-	Input,
+	Box,
+	HStack,
 	Image,
+	InputGroup,
+	InputRightAddon,
+	Input,
 	Menu,
+	MenuButton,
+	MenuList,
 	MenuItem,
-} from 'semantic-ui-react';
+	MenuDivider,
+} from '@chakra-ui/react';
+
+import { SearchIcon } from '@chakra-ui/icons';
 
 //* Context
 import { UserContext } from '../context/userContext';
@@ -19,65 +30,61 @@ import './css/Navbar.scss';
 //* Function Component
 const Navbar: React.FC = () => {
 	const { user, loggedIn, search, setSearch } = useContext(UserContext);
-
+	console.log(search);
 	return (
-		<header className='navbar'>
-			<Menu secondary>
-				<MenuItem as={Link} to='/'>
-					<Image width={40} src='/img/logo.svg' avatar />
-				</MenuItem>
-				<MenuItem position='right'>
-					<ButtonGroup>
-						<Button basic color='youtube' as={Link} to='/watch'>
-							Watch
-						</Button>
-						<Button basic color='youtube' as={Link} to='/list'>
-							List
-						</Button>
-						{loggedIn && (
-							<Button basic color='youtube' as={Link} to='/my-list'>
-								My List
-							</Button>
-						)}
-						<Button basic color='youtube' as={Link} to='/browse'>
-							Browse
-						</Button>
-					</ButtonGroup>
-				</MenuItem>
-				<MenuItem position='right'>
-					<Input
-						icon={<Button icon={{ name: 'search' }} as={Link} to='/search' />}
-						placeholder='Search Anime...'
-						value={search}
-						onChange={e => {
-							setSearch(e.target.value);
-						}}
-					/>
-				</MenuItem>
-				<MenuItem position='right'>
-					{loggedIn && (
-						<Button basic as={Link} to='/profile'>
-							<Image
-								src={`https://avatars.dicebear.com/api/identicon/${user.name}.svg`}
-								avatar
-							/>
-							&emsp;
-							<span>{user.name}</span>
-						</Button>
-					)}
-					{!loggedIn && (
-						<ButtonGroup>
-							<Button color='red' basic as={Link} to='/login'>
-								Login
-							</Button>
-							<Button color='blue' as={Link} to='/signup'>
-								Signup
-							</Button>
-						</ButtonGroup>
-					)}
-				</MenuItem>
-			</Menu>
-		</header>
+		<HStack
+			as={'header'}
+			className='navbar'
+			spacing={8}
+			padding='1.5vh 3vh'
+			justifyContent='space-between'>
+			<Box maxWidth='md' as={Link} to='/'>
+				<Image src='/img/logo.svg' alt='logo' maxHeight='8vh' />
+			</Box>
+			<ButtonGroup>
+				<Button variant='ghost' as={Link} to='/watch'>
+					Watch
+				</Button>
+				<Button variant='ghost' as={Link} to='/list'>
+					List
+				</Button>
+				<Button variant='ghost' as={Link} to='/my-list'>
+					My List
+				</Button>
+			</ButtonGroup>
+			<InputGroup width='sm'>
+				<Input
+					placeholder='Search Anime ...'
+					value={search}
+					width='sm'
+					onChange={e => setSearch(e.target.value)}
+				/>
+				<InputRightAddon as={Link} to='/search'>
+					<SearchIcon />
+				</InputRightAddon>
+			</InputGroup>
+			{loggedIn && user && (
+				<Menu>
+					<MenuButton minWidth='5vh' alignItems='center' variant='outline'>
+						{/* <HStack spacing={2}> */}
+						<Image
+							maxHeight='5vh'
+							borderRadius='50%'
+							src={`https://avatars.dicebear.com/api/identicon/${user.name}.svg`}
+						/>
+						{/* </HStack> */}
+					</MenuButton>
+					<MenuList>
+						<MenuItem as={Link} to='/profile'>
+							My Profile
+						</MenuItem>
+						<MenuDivider />
+						//TODO : Add logout
+						<MenuItem color='red'>Logout</MenuItem>
+					</MenuList>
+				</Menu>
+			)}
+		</HStack>
 	);
 };
 
