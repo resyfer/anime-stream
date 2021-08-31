@@ -51,27 +51,44 @@ const Home: React.FC<Props> = props => {
 			boxSize='border-box'>
 			<Image src='/img/logo.svg' alt='logo' margin='0 auto' maxWidth='35%' />
 			{loggedIn && (
-				<InputGroup minWidth='100%'>
-					<Input
+				<>
+					<InputGroup minWidth='100%'>
+						<Input
+							minWidth='100%'
+							placeholder='Search Anime ...'
+							width='sm'
+							ref={searchInput}
+						/>
+						<InputRightAddon
+							cursor='pointer'
+							onClick={() => {
+								if (searchInput.current.value.trim() != '') {
+									setSearch(searchInput.current.value.trim());
+									searchButton.current.click();
+								}
+							}}>
+							<SearchIcon />
+						</InputRightAddon>
+						<Button as={Link} to='/search' display='none' ref={searchButton}>
+							Search
+						</Button>
+					</InputGroup>
+					<br />
+					<ButtonGroup
 						minWidth='100%'
-						placeholder='Search Anime ...'
-						width='sm'
-						ref={searchInput}
-					/>
-					<InputRightAddon
-						cursor='pointer'
-						onClick={() => {
-							if (searchInput.current.value.trim() != '') {
-								setSearch(searchInput.current.value.trim());
-								searchButton.current.click();
-							}
-						}}>
-						<SearchIcon />
-					</InputRightAddon>
-					<Button as={Link} to='/search' display='none' ref={searchButton}>
-						Search
-					</Button>
-				</InputGroup>
+						alignItems='center'
+						justifyContent='center'>
+						<Button variant='outline' as={Link} to='/watch'>
+							Watch
+						</Button>
+						<Button variant='outline' as={Link} to='/list'>
+							List
+						</Button>
+						<Button variant='outline' as={Link} to='/my-list'>
+							My List
+						</Button>
+					</ButtonGroup>
+				</>
 			)}
 			{!loggedIn && (
 				<ButtonGroup
