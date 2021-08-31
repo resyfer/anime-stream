@@ -75,26 +75,28 @@ const App: React.FC = () => {
 					url,
 				}}>
 				<Router>
-					<Navbar />
-
 					<Switch>
 						<Route exact path='/'>
 							<Home title='Anime Stream | All your weeb needs in one place' />
 						</Route>
 
 						<Route exact path='/signup'>
+							<Navbar />
 							<Signup title='Signup | AnimeStream' />
 						</Route>
 
 						<Route exact path='/login'>
+							<Navbar />
 							<Login title='Login | AnimeStream' />
 						</Route>
 
 						<Route exact path='/my-list'>
+							<Navbar />
 							<MyList title='My List | AnimeStream' />
 						</Route>
 
 						<Route path='/'>
+							<Navbar />
 							<Error404 />
 						</Route>
 					</Switch>

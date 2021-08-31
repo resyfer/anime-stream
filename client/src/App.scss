@@ -40,10 +40,6 @@ a {
 	color: var(--theme2-100);
 }
 
-main {
-	min-height: calc(100vh - var(--navbar-height-pc) - var(--footer-height-pc));
-}
-
 ::selection {
 	color: var(--theme1-100);
 	background-color: var(--theme2-100);
