@@ -1,5 +1,5 @@
 //* React
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 //* Context
@@ -14,7 +14,6 @@ import {
 	Input,
 	ButtonGroup,
 	Button,
-	Text,
 } from '@chakra-ui/react';
 
 import { SearchIcon } from '@chakra-ui/icons';
@@ -30,6 +29,9 @@ interface Props {
 //* Function Component
 const Home: React.FC<Props> = props => {
 	const { user, loggedIn, search, setSearch } = useContext(UserContext);
+
+	const searchInput = useRef<any>();
+	const searchButton = useRef<any>();
 
 	useEffect(() => {
 		document.title = props.title;
@@ -53,13 +55,22 @@ const Home: React.FC<Props> = props => {
 					<Input
 						minWidth='100%'
 						placeholder='Search Anime ...'
-						value={search}
 						width='sm'
-						onChange={e => setSearch(e.target.value)}
+						ref={searchInput}
 					/>
-					<InputRightAddon as={Link} to='/search'>
+					<InputRightAddon
+						cursor='pointer'
+						onClick={() => {
+							if (searchInput.current.value.trim() != '') {
+								setSearch(searchInput.current.value.trim());
+								searchButton.current.click();
+							}
+						}}>
 						<SearchIcon />
 					</InputRightAddon>
+					<Button as={Link} to='/search' display='none' ref={searchButton}>
+						Search
+					</Button>
 				</InputGroup>
 			)}
 			{!loggedIn && (

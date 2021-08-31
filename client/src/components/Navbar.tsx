@@ -1,5 +1,5 @@
 //* React
-import React, { useEffect, useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 //* Chakra UI
@@ -31,6 +31,9 @@ import './css/Navbar.scss';
 const Navbar: React.FC = () => {
 	const { user, loggedIn, search, setSearch } = useContext(UserContext);
 
+	const searchInput = useRef<any>();
+	const searchButton = useRef<any>();
+
 	return (
 		<HStack
 			as={'header'}
@@ -58,13 +61,22 @@ const Navbar: React.FC = () => {
 					<InputGroup width='sm'>
 						<Input
 							placeholder='Search Anime ...'
-							value={search}
 							width='sm'
-							onChange={e => setSearch(e.target.value)}
+							ref={searchInput}
 						/>
-						<InputRightAddon as={Link} to='/search'>
+						<InputRightAddon
+							cursor='pointer'
+							onClick={() => {
+								if (searchInput.current.value.trim() != '') {
+									setSearch(searchInput.current.value.trim());
+									searchButton.current.click();
+								}
+							}}>
 							<SearchIcon />
 						</InputRightAddon>
+						<Button as={Link} to='/search' display='none' ref={searchButton}>
+							Search
+						</Button>
 					</InputGroup>
 					<Menu>
 						<MenuButton minWidth='5vh' alignItems='center' variant='outline'>
