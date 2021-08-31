@@ -7,7 +7,7 @@ import { UserContext } from '../context/userContext';
 
 //* GraphQL
 import { useQuery } from '@apollo/client';
-import SEARCH_ANIME from '../graphql/queries/searchAnime';
+import SEARCH_ANIME from '../graphql/queries/searchAnimeQuery';
 
 //* Chakra UI
 import { Box, Image, Text, Grid } from '@chakra-ui/react';
@@ -28,6 +28,10 @@ const Search: React.FC<Props> = props => {
 	});
 
 	useEffect(() => {
+		search == '' && window.location.replace('/');
+	}, []);
+
+	useEffect(() => {
 		document.title = props.title;
 	}, [props]);
 
@@ -35,9 +39,11 @@ const Search: React.FC<Props> = props => {
 		<div className='search'>
 			{loading && <div className='loading'>Loading ...</div>}
 			{!loading &&
+				!error &&
 				(!data || data.searchAnime.length === 0 || search.trim() === '') && (
 					<div className='no-result'>Could not find any result 😭</div>
 				)}
+			{error && <div className='error'>Error, gomenasai {'>~<'} </div>}
 			<Grid
 				templateColumns='repeat(5, 1fr)'
 				gap={4}
