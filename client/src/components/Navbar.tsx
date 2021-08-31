@@ -33,7 +33,6 @@ const Navbar: React.FC = () => {
 
 	const searchInput = useRef<any>();
 	const searchButton = useRef<any>();
-
 	return (
 		<HStack
 			as={'header'}

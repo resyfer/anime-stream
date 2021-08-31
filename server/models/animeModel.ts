@@ -8,6 +8,10 @@ const animeSchema = new mongoose.Schema({
 	description: String,
 	genre: [String],
 	seasons: [mongoose.SchemaTypes.ObjectId],
+	img: {
+		wallpaper: String,
+		thumbnail: String,
+	},
 });
 
 const Anime = mongoose.model('anime', animeSchema);

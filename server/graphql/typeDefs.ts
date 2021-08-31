@@ -23,6 +23,7 @@ let typeDefs = gql`
 		description: String
 		genre: [String]
 		seasons: [ID]
+		img: Image
 	}
 
 	type Airing {
