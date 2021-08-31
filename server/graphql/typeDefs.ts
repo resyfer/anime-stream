@@ -83,6 +83,8 @@ let typeDefs = gql`
 		anime: [Anime]
 
 		watchList: [UserAnime]
+
+		searchAnime(anime: String): [Anime]
 	}
 
 	# Mutations

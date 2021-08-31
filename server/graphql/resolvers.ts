@@ -28,6 +28,10 @@ interface Context {
 	uid: string;
 }
 
+interface SearchAnime {
+	anime: string;
+}
+
 const resolvers = {
 	Query: {
 		async user(_parent: any, _args: any, context: Context, _info: any) {
@@ -74,6 +78,21 @@ const resolvers = {
 				return {
 					error: 'There was an error fetching watch list data',
 				};
+			}
+		},
+
+		async searchAnime(
+			_parent: any,
+			args: SearchAnime,
+			_context: Context,
+			_info: any
+		) {
+			try {
+				return await Anime.find({
+					name: { $regex: args.anime, $options: 'i' },
+				});
+			} catch (err) {
+				return null;
 			}
 		},
 	},
