@@ -61,6 +61,10 @@ const resolvers = {
 			}
 		},
 
+		async list() {
+			return await Season.find();
+		},
+
 		async watchList(_parent: any, _args: any, context: Context, _info: any) {
 			try {
 				if (context && context.uid) {

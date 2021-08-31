@@ -83,6 +83,8 @@ let typeDefs = gql`
 
 		anime: [Anime]
 
+		list: [Season]
+
 		watchList: [UserAnime]
 
 		searchAnime(anime: String): [Anime]

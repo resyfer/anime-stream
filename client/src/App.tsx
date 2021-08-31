@@ -19,6 +19,7 @@ import Signup from './pages/Signup';
 import Login from './pages/Login';
 import Search from './pages/Search';
 import Watch from './pages/Watch';
+import List from './pages/List';
 import MyList from './pages/MyList';
 
 //* Components
@@ -100,6 +101,11 @@ const App: React.FC = () => {
 						<Route exact path='/watch'>
 							<Navbar />
 							<Watch title='Watch | AnimeStream' />
+						</Route>
+
+						<Route exact path='/list'>
+							<Navbar />
+							<List title='Watch | AnimeStream' />
 						</Route>
 
 						<Route exact path='/my-list'>
