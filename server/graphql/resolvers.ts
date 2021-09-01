@@ -61,6 +61,21 @@ const resolvers = {
 			}
 		},
 
+		async animeDetails(
+			_parent: any,
+			args: { id: string },
+			_context: Context,
+			_info: any
+		) {
+			try {
+				return await Anime.findById(args.id);
+			} catch (err) {
+				return {
+					error: "Couldn't find anime :(",
+				};
+			}
+		},
+
 		async list() {
 			return await Season.find();
 		},

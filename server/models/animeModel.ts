@@ -7,7 +7,12 @@ const animeSchema = new mongoose.Schema({
 	},
 	description: String,
 	genre: [String],
-	seasons: [mongoose.SchemaTypes.ObjectId],
+	seasons: [
+		{
+			_id: mongoose.SchemaTypes.ObjectId,
+			name: String,
+		},
+	],
 	img: {
 		wallpaper: String,
 		thumbnail: String,

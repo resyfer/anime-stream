@@ -20,6 +20,7 @@ import Login from './pages/Login';
 import Search from './pages/Search';
 import Watch from './pages/Watch';
 import List from './pages/List';
+import Anime from './pages/Anime';
 import MyList from './pages/MyList';
 
 //* Components
@@ -105,7 +106,12 @@ const App: React.FC = () => {
 
 						<Route exact path='/list'>
 							<Navbar />
-							<List title='Watch | AnimeStream' />
+							<List title='List | AnimeStream' />
+						</Route>
+
+						<Route exact path='/anime/:animeId'>
+							<Navbar />
+							<Anime title='Anime | AnimeStream' />
 						</Route>
 
 						<Route exact path='/my-list'>

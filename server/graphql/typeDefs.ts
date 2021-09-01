@@ -17,12 +17,17 @@ let typeDefs = gql`
 		list: [UserAnime]
 	}
 
+	type animeSeasonList {
+		_id: ID
+		name: String
+	}
+
 	type Anime {
 		_id: ID
 		name: String
 		description: String
 		genre: [String]
-		seasons: [ID]
+		seasons: [animeSeasonList]
 		img: Image
 	}
 
@@ -82,6 +87,8 @@ let typeDefs = gql`
 		user: User
 
 		anime: [Anime]
+
+		animeDetails(id: String): Anime
 
 		list: [Season]
 
