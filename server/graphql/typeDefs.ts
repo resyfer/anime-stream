@@ -90,6 +90,8 @@ let typeDefs = gql`
 
 		animeDetails(id: String): Anime
 
+		seasonDetails(id: String): Season
+
 		list: [Season]
 
 		watchList: [UserAnime]

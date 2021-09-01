@@ -76,6 +76,15 @@ const resolvers = {
 			}
 		},
 
+		async seasonDetails(
+			_parent: any,
+			args: { id: string },
+			_context: Context,
+			_info: any
+		) {
+			return await Season.findById(args.id);
+		},
+
 		async list() {
 			return await Season.find();
 		},
