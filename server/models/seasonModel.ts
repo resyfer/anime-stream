@@ -16,6 +16,7 @@ const seasonSchema = new mongoose.Schema({
 		{
 			name: String,
 			duration: Number,
+			video: String,
 		},
 	],
 	img: {

@@ -6,6 +6,7 @@ const SEASON = gql`
 			_id
 			episodes {
 				name
+				video
 			}
 			img {
 				thumbnail

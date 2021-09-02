@@ -39,6 +39,7 @@ let typeDefs = gql`
 	type Episodes {
 		name: String
 		duration: Int
+		video: String
 	}
 
 	type Image {
