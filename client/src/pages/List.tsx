@@ -21,6 +21,8 @@ const List: React.FC<Props> = props => {
 		document.title = props.title;
 	}, [props]);
 
+	console.log(data, error);
+
 	return (
 		<div className='watch'>
 			{loading && <div className='loading'>Loading ...</div>}

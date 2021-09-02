@@ -4,7 +4,10 @@ const LIST = gql`
 	query list {
 		list {
 			_id
-			anime
+			anime {
+				name
+				_id
+			}
 			name {
 				anime
 				season
