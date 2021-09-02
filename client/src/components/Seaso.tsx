@@ -33,7 +33,7 @@ const Season: React.FC<Props> = props => {
 					(episode: any, episodeIndex: number) => (
 						<Button
 							as={Link}
-							to={`/watch/${props.id}`}
+							to={`/watch/${props.id}/${episodeIndex + 1}`}
 							minWidth='30%'
 							height='7.5vh'
 							margin='2vh auto'

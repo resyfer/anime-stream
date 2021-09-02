@@ -10,7 +10,7 @@ import ANIME from '../graphql/queries/animeQuery';
 import { Image, Box, Text, ButtonGroup, Button } from '@chakra-ui/react';
 
 //* Components
-import Season from '../components/season';
+import Season from '../components/Season';
 
 //* CSS
 import './css/Anime.scss';
