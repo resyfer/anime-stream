@@ -34,9 +34,10 @@ const Watch: React.FC<Props> = props => {
 				width='95%'
 				margin='0 auto'>
 				{data &&
-					data.anime.length != 0 &&
-					data.anime.map((anime: any) => (
+					data.anime.length !== 0 &&
+					data.anime.map((anime: any, animeIndex: number) => (
 						<Box
+							key={animeIndex}
 							width='15vw'
 							height='25vw'
 							borderWidth='2px'

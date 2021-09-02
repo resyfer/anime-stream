@@ -28,7 +28,7 @@ interface Props {
 
 //* Function Component
 const Home: React.FC<Props> = props => {
-	const { user, loggedIn, search, setSearch } = useContext(UserContext);
+	const { loggedIn, setSearch } = useContext(UserContext);
 
 	const searchInput = useRef<any>();
 	const searchButton = useRef<any>();
@@ -62,7 +62,7 @@ const Home: React.FC<Props> = props => {
 						<InputRightAddon
 							cursor='pointer'
 							onClick={() => {
-								if (searchInput.current.value.trim() != '') {
+								if (searchInput.current.value.trim() !== '') {
 									setSearch(searchInput.current.value.trim());
 									searchButton.current.click();
 								}

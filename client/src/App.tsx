@@ -22,6 +22,7 @@ import Watch from './pages/Watch';
 import List from './pages/List';
 import Anime from './pages/Anime';
 import MyList from './pages/MyList';
+import WatchAnime from './pages/WatchAnime';
 
 //* Components
 import Navbar from './components/Navbar';
@@ -102,6 +103,11 @@ const App: React.FC = () => {
 						<Route exact path='/watch'>
 							<Navbar />
 							<Watch title='Watch | AnimeStream' />
+						</Route>
+
+						<Route exact path='/watch/:seasonId/:episode'>
+							<Navbar />
+							<WatchAnime title='Watch | AnimeStream' />
 						</Route>
 
 						<Route exact path='/list'>

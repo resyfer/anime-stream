@@ -57,9 +57,15 @@ let typeDefs = gql`
 		likes: Int
 	}
 
+	type seasonAnime {
+		_id: ID
+		name: String
+	}
+
 	type Season {
 		_id: ID
-		anime: ID
+
+		anime: seasonAnime
 
 		airing: [Airing]
 

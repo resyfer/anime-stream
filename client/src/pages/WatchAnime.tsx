@@ -1,32 +1,39 @@
 //* React
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 //* GraphQl
 import { useQuery } from '@apollo/client';
 import SEASON from '../graphql/queries/seasonQuery';
 
 //* Chakra UI
-import { Box, Button, SimpleGrid } from '@chakra-ui/react';
+import { SimpleGrid, Button } from '@chakra-ui/react';
 
+//* Props
 interface Props {
-	id: string;
+	title: string;
 }
 
-const Season: React.FC<Props> = props => {
-	const { data, loading, error } = useQuery(SEASON, {
+const WatchAnime: React.FC<Props> = props => {
+	const params: any = useParams();
+
+	//TODO: Add watch anime query
+
+	const { loading, error, data } = useQuery(SEASON, {
 		variables: {
-			id: props.id,
+			id: params.seasonId,
 		},
 	});
+
 	return (
-		<Box as='main' display='flex' flexWrap='wrap' className='season'>
+		<div className='watch-anime'>
 			{loading && <div className='loading'>Loading ...</div>}
 			{!loading && !error && !data && (
 				<div className='no-result'>Could not find any result 😭</div>
 			)}
 			{error && <div className='error'>Error, gomenasai {'>~<'} </div>}
 			{data && data.seasonDetails && (
+				// <div className='video'>{data.seasonDetails.episodes[params.episode - 1].video}</div>
 				<SimpleGrid
 					width='80%'
 					minChildWidth='60px'
@@ -37,17 +44,17 @@ const Season: React.FC<Props> = props => {
 						(episode: any, episodeIndex: number) => (
 							<Button
 								as={Link}
-								key={episodeIndex}
 								maxWidth='60px'
-								to={`/watch/${props.id}/${episodeIndex + 1}`}>
+								key={episodeIndex}
+								to={`/watch/${params.seasonId}/${episodeIndex + 1}`}>
 								{episodeIndex + 1}
 							</Button>
 						)
 					)}
 				</SimpleGrid>
 			)}
-		</Box>
+		</div>
 	);
 };
 
-export default Season;
+export default WatchAnime;

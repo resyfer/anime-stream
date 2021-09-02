@@ -29,7 +29,7 @@ import './css/Navbar.scss';
 
 //* Function Component
 const Navbar: React.FC = () => {
-	const { user, loggedIn, search, setSearch } = useContext(UserContext);
+	const { user, loggedIn, setSearch } = useContext(UserContext);
 
 	const searchInput = useRef<any>();
 	const searchButton = useRef<any>();
@@ -66,7 +66,7 @@ const Navbar: React.FC = () => {
 						<InputRightAddon
 							cursor='pointer'
 							onClick={() => {
-								if (searchInput.current.value.trim() != '') {
+								if (searchInput.current.value.trim() !== '') {
 									setSearch(searchInput.current.value.trim());
 									searchButton.current.click();
 								}

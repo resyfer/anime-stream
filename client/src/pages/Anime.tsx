@@ -1,6 +1,6 @@
 //* React
 import React, { useState, useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 //* GraphQL
 import { useQuery } from '@apollo/client';
@@ -36,8 +36,6 @@ const Anime: React.FC<Props> = props => {
 	useEffect(() => {
 		document.title = props.title;
 	}, [props]);
-
-	console.log(data);
 
 	return (
 		<div className='watch'>
@@ -95,19 +93,22 @@ const Anime: React.FC<Props> = props => {
 							bottom='2vh'
 							left='50%'
 							transform='translate(-50%, 0)'>
-							{data.animeDetails.seasons.map((season: any) => (
-								<Button
-									variant='outline'
-									backgroundColor='var(--theme1-100)'
-									color='var(--theme2-100)'
-									borderColor='var(--theme2-100)'
-									onClick={() => {
-										setSeasonDisplay(true);
-										setSeasonId(season._id);
-									}}>
-									{season.name}
-								</Button>
-							))}
+							{data.animeDetails.seasons.map(
+								(season: any, seasonIndex: number) => (
+									<Button
+										key={seasonIndex}
+										variant='outline'
+										backgroundColor='var(--theme1-100)'
+										color='var(--theme2-100)'
+										borderColor='var(--theme2-100)'
+										onClick={() => {
+											setSeasonDisplay(true);
+											setSeasonId(season._id);
+										}}>
+										{season.name}
+									</Button>
+								)
+							)}
 						</ButtonGroup>
 					</Box>
 					{seasonDisplay && <Season id={seasonId} />}

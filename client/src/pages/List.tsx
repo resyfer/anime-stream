@@ -20,7 +20,7 @@ const List: React.FC<Props> = props => {
 	useEffect(() => {
 		document.title = props.title;
 	}, [props]);
-	console.log(data, error);
+
 	return (
 		<div className='watch'>
 			{loading && <div className='loading'>Loading ...</div>}
@@ -34,9 +34,10 @@ const List: React.FC<Props> = props => {
 				width='95%'
 				margin='0 auto'>
 				{data &&
-					data.list.length != 0 &&
-					data.list.map((season: any) => (
+					data.list.length !== 0 &&
+					data.list.map((season: any, seasonIndex: number) => (
 						<Box
+							key={seasonIndex}
 							width='15vw'
 							height='27.5vw'
 							borderWidth='2px'
@@ -65,7 +66,7 @@ const List: React.FC<Props> = props => {
 								justifyContent='center'
 								alignItems='center'>
 								{season.name.anime +
-									(season.name.season != '' ? ' : ' + season.name.season : '')}
+									(season.name.season !== '' ? ' : ' + season.name.season : '')}
 								<br />
 							</Text>
 						</Box>

@@ -1,7 +1,10 @@
 import mongoose from 'mongoose';
 
 const seasonSchema = new mongoose.Schema({
-	anime: mongoose.SchemaTypes.ObjectId,
+	anime: {
+		_id: mongoose.SchemaTypes.ObjectId,
+		name: String,
+	},
 	airing: [
 		{
 			year: Number,

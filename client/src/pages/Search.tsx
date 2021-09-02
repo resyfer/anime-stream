@@ -1,6 +1,5 @@
 //* React
 import React, { useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
 
 //* Context
 import { UserContext } from '../context/userContext';
@@ -28,8 +27,8 @@ const Search: React.FC<Props> = props => {
 	});
 
 	useEffect(() => {
-		search == '' && window.location.replace('/');
-	}, []);
+		search === '' && window.location.replace('/');
+	}, [search]);
 
 	useEffect(() => {
 		document.title = props.title;
@@ -51,9 +50,10 @@ const Search: React.FC<Props> = props => {
 				margin='0 auto'>
 				{data &&
 					search.trim() !== '' &&
-					data.searchAnime.length != 0 &&
-					data.searchAnime.map((anime: any) => (
+					data.searchAnime.length !== 0 &&
+					data.searchAnime.map((anime: any, animeIndex: number) => (
 						<Box
+							key={animeIndex}
 							width='15vw'
 							height='25vw'
 							borderWidth='2px'

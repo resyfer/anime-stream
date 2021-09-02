@@ -20,7 +20,6 @@ const MyList: React.FC<Props> = props => {
 
 	// eslint-disable-next-line
 	const { loading, error, data } = useQuery(USER_LIST);
-	console.log(data);
 
 	const status = ['Completed', 'Watching'];
 
