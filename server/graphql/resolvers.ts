@@ -137,6 +137,7 @@ const resolvers = {
 			try {
 				const user = await User.findById(context.uid);
 				const list: any[] = await user.list;
+
 				const seasonIndex = list.findIndex(
 					(season: any) => season._id == args.seasonId
 				);
