@@ -1,10 +1,11 @@
 //* React
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 
 //* GraphQl
-import { useQuery } from '@apollo/client';
-import SEASON from '../graphql/queries/seasonQuery';
+import { useQuery, useMutation } from '@apollo/client';
+import WATCH from '../graphql/queries/watchSeason';
+import USER_DETAILS from '../graphql/queries/watchUserDetails';
 
 //* Chakra UI
 import { SimpleGrid, Button, Box, Text } from '@chakra-ui/react';
@@ -17,15 +18,25 @@ interface Props {
 const WatchAnime: React.FC<Props> = props => {
 	const params: any = useParams();
 
-	//TODO: Add watch anime query
-
-	const { loading, error, data } = useQuery(SEASON, {
+	const { loading, error, data } = useQuery(WATCH, {
 		variables: {
-			id: params.seasonId,
+			seasonId: params.seasonId,
+			episode: Number(params.episode),
 		},
 	});
 
-	console.log(data);
+	const [userDetails, { error: userError, data: userData }] = useMutation(
+		USER_DETAILS,
+		{
+			variables: {
+				seasonId: params.seasonId,
+			},
+		}
+	);
+
+	useEffect(() => {
+		if (data) userDetails();
+	}, [data, userDetails]);
 
 	return (
 		<div className='watch-anime'>
@@ -33,18 +44,20 @@ const WatchAnime: React.FC<Props> = props => {
 			{!loading && !error && !data && (
 				<div className='no-result'>Could not find any result 😭</div>
 			)}
-			{error && <div className='error'>Error, gomenasai {'>~<'} </div>}
-			{data && data.seasonDetails && (
+			{(error || userError) && (
+				<div className='error'>Error, gomenasai {'>~<'} </div>
+			)}
+			{data && userData && data.watchAnime && (
 				<>
-					<Text margin='5vh 5%' textAlign='center' as='h3'>
-						{data.seasonDetails.name.anime}
-						{' : '} {data.seasonDetails.name.season}
+					<Text margin='2vh 5%' textAlign='center' as='h3' fontSize='3.2vh'>
+						{data.watchAnime.name.anime}
+						{' : '} {data.watchAnime.name.season}
 						{' - '}
 						Episode {params.episode}
 					</Text>
 					<Box margin='5vh 0' display='flex' justifyContent='center'>
 						<video
-							src={data.seasonDetails.episodes[params.episode - 1].video}
+							src={data.watchAnime.episodes[Number(params.episode) - 1].video}
 							controls></video>
 					</Box>
 					<SimpleGrid
@@ -53,12 +66,27 @@ const WatchAnime: React.FC<Props> = props => {
 						spacing='10px'
 						margin='5vh auto'
 						className='episode-list'>
-						{data.seasonDetails.episodes.map(
+						{data.watchAnime.episodes.map(
 							(episode: any, episodeIndex: number) => (
 								<Button
 									as={Link}
 									maxWidth='60px'
 									key={episodeIndex}
+									color={
+										userData.userDetails.episodes[episodeIndex]
+											? 'var(--theme2-100)'
+											: 'var(--theme1-100-2)'
+									}
+									backgroundColor={
+										userData.userDetails.episodes[episodeIndex]
+											? 'var(--theme1-100-2)'
+											: 'var(--theme2-100)'
+									}
+									border={
+										episodeIndex === Number(params.episode) - 1
+											? '3px solid var(--theme2-100)'
+											: 'none'
+									}
 									to={`/watch/${params.seasonId}/${episodeIndex + 1}`}>
 									{episodeIndex + 1}
 								</Button>

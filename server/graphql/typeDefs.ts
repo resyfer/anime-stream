@@ -97,6 +97,8 @@ let typeDefs = gql`
 
 		animeDetails(id: String): Anime
 
+		watchAnime(seasonId: ID!, episode: Int!): Season
+
 		seasonDetails(id: String): Season
 
 		list: [Season]
@@ -132,9 +134,9 @@ let typeDefs = gql`
 			password: String!
 		): registerResponse
 
-		loginUser(email: String!, password: String!): loginResponse
+		userDetails(seasonId: ID!): UserAnime
 
-		watchAnime(seasonId: ID!, episode: Int!): Season
+		loginUser(email: String!, password: String!): loginResponse
 
 		likeSeason(seasonId: ID!, liked: Boolean!): likeSeasonResponse
 

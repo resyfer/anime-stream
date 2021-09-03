@@ -32,6 +32,10 @@ interface SearchAnime {
 	anime: string;
 }
 
+interface watchUser {
+	seasonId: string;
+}
+
 const resolvers = {
 	Query: {
 		async user(_parent: any, _args: any, context: Context, _info: any) {
@@ -123,73 +127,6 @@ const resolvers = {
 				return null;
 			}
 		},
-	},
-
-	Mutation: {
-		async registerUser(
-			_parent: any,
-			args: UserArgs,
-			_context: Context,
-			_info: any
-		) {
-			try {
-				const userExist = await User.findOne({ email: args.email });
-				if (userExist)
-					return {
-						error: 'User Already Exists',
-					};
-
-				const hashedPwd = await hash(args.password, await genSalt());
-
-				const user = new User({
-					name: args.name,
-					password: hashedPwd,
-					email: args.email,
-				});
-
-				const userData: any = await user.save();
-
-				const token = jwt.sign(userData.id, process.env['SECRET'] as string);
-
-				return {
-					user,
-					jwt: token,
-				};
-			} catch (err) {
-				return {
-					error: 'There was an error',
-				};
-			}
-		},
-
-		async loginUser(
-			_parent: any,
-			args: UserArgs,
-			_context: Context,
-			_info: any
-		) {
-			try {
-				const user = await User.findOne({ email: args.email });
-				const login = await compare(args.password, user.password);
-				const token = jwt.sign(user.id, process.env['SECRET'] as string);
-
-				if (login) {
-					return {
-						user,
-						jwt: token,
-					};
-				} else {
-					return {
-						error: 'Invalid email/password',
-					};
-				}
-			} catch (err) {
-				console.log(err);
-				return {
-					error: 'Invalid email/password',
-				};
-			}
-		},
 
 		async watchAnime(
 			_parent: any,
@@ -248,6 +185,105 @@ const resolvers = {
 			} catch (err) {
 				return {
 					error: 'There was an error',
+				};
+			}
+		},
+	},
+
+	Mutation: {
+		async registerUser(
+			_parent: any,
+			args: UserArgs,
+			_context: Context,
+			_info: any
+		) {
+			try {
+				const userExist = await User.findOne({ email: args.email });
+				if (userExist)
+					return {
+						error: 'User Already Exists',
+					};
+
+				const hashedPwd = await hash(args.password, await genSalt());
+
+				const user = new User({
+					name: args.name,
+					password: hashedPwd,
+					email: args.email,
+				});
+
+				const userData: any = await user.save();
+
+				const token = jwt.sign(userData.id, process.env['SECRET'] as string);
+
+				return {
+					user,
+					jwt: token,
+				};
+			} catch (err) {
+				return {
+					error: 'There was an error',
+				};
+			}
+		},
+
+		async userDetails(
+			_parent: any,
+			args: watchUser,
+			context: Context,
+			_info: any
+		) {
+			try {
+				if (context && context.uid) {
+					const user = await User.findById(context.uid);
+					const index = user.list.findIndex(
+						(season: any) => season._id == args.seasonId
+					);
+
+					if (index != -1) {
+						return user.list[index];
+					} else {
+						return {
+							error: 'Wrong episode',
+						};
+					}
+				} else {
+					return {
+						error: 'Could not find User',
+					};
+				}
+			} catch (err) {
+				return {
+					error: 'Could not find User',
+				};
+			}
+		},
+
+		async loginUser(
+			_parent: any,
+			args: UserArgs,
+			_context: Context,
+			_info: any
+		) {
+			try {
+				const user = await User.findOne({ email: args.email });
+				const login = await compare(args.password, user.password);
+				const token = jwt.sign(user.id, process.env['SECRET'] as string);
+
+				if (login) {
+					return {
+						user,
+						jwt: token,
+					};
+				} else {
+					return {
+						error: 'Invalid email/password',
+					};
+				}
+			} catch (err) {
+				console.log(err);
+				return {
+					error: 'Invalid email/password',
 				};
 			}
 		},

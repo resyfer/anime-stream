@@ -1,10 +1,11 @@
 //* React
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 //* GraphQl
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import SEASON from '../graphql/queries/seasonQuery';
+import USER_DETAILS from '../graphql/queries/watchUserDetails';
 
 //* Chakra UI
 import { Box, Button, SimpleGrid } from '@chakra-ui/react';
@@ -19,14 +20,30 @@ const Season: React.FC<Props> = props => {
 			id: props.id,
 		},
 	});
+
+	const [userDetails, { error: userError, data: userData }] = useMutation(
+		USER_DETAILS,
+		{
+			variables: {
+				seasonId: props.id,
+			},
+		}
+	);
+
+	useEffect(() => {
+		if (data) userDetails();
+	}, [data, userDetails]);
+
 	return (
 		<Box as='main' display='flex' flexWrap='wrap' className='season'>
 			{loading && <div className='loading'>Loading ...</div>}
 			{!loading && !error && !data && (
 				<div className='no-result'>Could not find any result 😭</div>
 			)}
-			{error && <div className='error'>Error, gomenasai {'>~<'} </div>}
-			{data && data.seasonDetails && (
+			{(error || userError) && (
+				<div className='error'>Error, gomenasai {'>~<'} </div>
+			)}
+			{data && userData && data.seasonDetails && (
 				<SimpleGrid
 					width='80%'
 					minChildWidth='60px'
@@ -37,8 +54,18 @@ const Season: React.FC<Props> = props => {
 						(episode: any, episodeIndex: number) => (
 							<Button
 								as={Link}
-								key={episodeIndex}
 								maxWidth='60px'
+								key={episodeIndex}
+								color={
+									userData.userDetails.episodes[episodeIndex]
+										? 'var(--theme2-100)'
+										: 'var(--theme1-100-2)'
+								}
+								backgroundColor={
+									userData.userDetails.episodes[episodeIndex]
+										? 'var(--theme1-100-2)'
+										: 'var(--theme2-100)'
+								}
 								to={`/watch/${props.id}/${episodeIndex + 1}`}>
 								{episodeIndex + 1}
 							</Button>
