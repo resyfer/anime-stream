@@ -98,7 +98,6 @@ const resolvers = {
 				if (context && context.uid) {
 					const user = await User.findById(context.uid);
 
-					// TODO: Add season data in the list
 					return await user.list;
 				} else {
 					return {

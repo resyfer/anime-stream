@@ -50,12 +50,12 @@ const Navbar: React.FC = () => {
 						<Button variant='ghost' as={Link} to='/watch'>
 							Watch
 						</Button>
-						<Button variant='ghost' as={Link} to='/list'>
+						{/* <Button variant='ghost' as={Link} to='/list'>
 							List
 						</Button>
 						<Button variant='ghost' as={Link} to='/my-list'>
 							My List
-						</Button>
+						</Button> */}
 					</ButtonGroup>
 					<InputGroup width='sm'>
 						<Input
@@ -86,7 +86,7 @@ const Navbar: React.FC = () => {
 							/>
 						</MenuButton>
 						<MenuList>
-							<MenuItem as={Link} to='/profile'>
+							<MenuItem>
 								My Profile
 							</MenuItem>
 							<MenuDivider />

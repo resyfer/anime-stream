@@ -110,20 +110,20 @@ const App: React.FC = () => {
 							<WatchAnime title='Watch | AnimeStream' />
 						</Route>
 
-						<Route exact path='/list'>
+						{/* <Route exact path='/list'>
 							<Navbar />
 							<List title='List | AnimeStream' />
-						</Route>
+						</Route> */}
 
 						<Route exact path='/anime/:animeId'>
 							<Navbar />
 							<Anime title='Anime | AnimeStream' />
 						</Route>
 
-						<Route exact path='/my-list'>
+						{/* <Route exact path='/my-list'>
 							<Navbar />
 							<MyList title='My List | AnimeStream' />
-						</Route>
+						</Route> */}
 
 						<Route path='/'>
 							<Navbar />

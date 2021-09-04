@@ -81,12 +81,12 @@ const Home: React.FC<Props> = props => {
 						<Button variant='outline' as={Link} to='/watch'>
 							Watch
 						</Button>
-						<Button variant='outline' as={Link} to='/list'>
+						{/* <Button variant='outline' as={Link} to='/list'>
 							List
 						</Button>
 						<Button variant='outline' as={Link} to='/my-list'>
 							My List
-						</Button>
+						</Button> */}
 					</ButtonGroup>
 				</>
 			)}
