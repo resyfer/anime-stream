@@ -61,7 +61,9 @@ dotenv.config({ path: './config/.env' });
 
 	if (process.env['NODE_ENV'] != 'development') {
 		app.get('/', (req, res) => {
-			res.send(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+			res.send(
+				path.resolve(__dirname, '../..', 'client', 'build', 'index.html')
+			);
 		});
 	}
 
