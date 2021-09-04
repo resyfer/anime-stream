@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import jwt from 'jsonwebtoken';
 import cors from 'cors';
+import path from 'path';
 
 //* Module Imports
 import typeDefs from './graphql/typeDefs';
@@ -57,6 +58,12 @@ dotenv.config({ path: './config/.env' });
 	});
 
 	console.log('DB Connected');
+
+	if (process.env['NODE_ENV'] != 'development') {
+		app.get('/', (req, res) => {
+			res.send(path.resolve(__dirname, '..', 'client', 'build', 'index.html'));
+		});
+	}
 
 	app.listen(process.env['PORT'], () => {
 		console.log(
